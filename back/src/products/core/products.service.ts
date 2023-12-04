@@ -19,7 +19,7 @@ export class ProductService {
   }
 
   public async createProduct(productData: Product): Promise<void | Error> {
-    const findProduct: Product = await this.productsRepository.findById(productData._id);
+    const findProduct: Product = await this.productsRepository.findByName(productData.name);
     if (findProduct) return new ItemAlreadyExistError();
     await this.productsRepository.create({
       ...productData,

@@ -31,4 +31,12 @@ export class FakeProductsRepository implements ProductsRepository {
     this.products = this.products.filter(product => product._id !== id);
     return true;
   }
+
+  findAllWithPaginationAndFilter(name: string, category: string, price: number, page: number, limit: number): Promise<Product[]> {
+    return Promise.resolve([]);
+  }
+
+  findByName(name: string): Promise<Product | null> {
+    return Promise.resolve(undefined);
+  }
 }

@@ -2,7 +2,7 @@ import {dbConnection} from "../core/database";
 import request from "supertest";
 import app from "../app";
 import {CreateProductDto, UpdateProductDto} from "../products/web/products.dto";
-import {ProductModel} from "../products/product.model";
+import {ProductModel} from "../products/infra/product.model";
 
 describe('Products HTTP tests', () => {
   let conn: typeof import("mongoose");
@@ -36,6 +36,19 @@ describe('Products HTTP tests', () => {
       expect(product.description).toBe(dto.description)
       expect(product.category).toBe(dto.category)
     })
+  })
+
+  it('should not create a new product if it already exists', async () => {
+    const product = await AddProductToDB({name: "Clothes"})
+
+    const dto = new CreateProductDto()
+    dto.name = product.name
+    dto.price = 10
+    dto.quantity = 10
+    dto.description = 'Test'
+    dto.category = 'Test Category'
+
+    await request(app).post('/products').send(dto).expect(409)
   })
 
   it('should update a product', async () => {

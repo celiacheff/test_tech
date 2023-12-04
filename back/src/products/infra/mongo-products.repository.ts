@@ -1,6 +1,6 @@
 import {ProductsRepository} from "../core/products.repository";
 import {Product} from "../core/product";
-import {ProductModel} from "../product.model";
+import {ProductModel} from "./product.model";
 
 export class MongoProductsRepository implements ProductsRepository {
   public async findAll(): Promise<Product[]> {
@@ -28,6 +28,10 @@ export class MongoProductsRepository implements ProductsRepository {
     return ProductModel.findByIdAndDelete(
       id
     );
+  }
+
+  public findByName(name: string): Promise<Product | null> {
+    return ProductModel.findOne({name: name}).exec();
   }
 
   public findAllWithPaginationAndFilter(name: string, category: string, price: number, page: number, limit: number): Promise<Product[]> {

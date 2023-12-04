@@ -33,11 +33,13 @@ export class ProductController {
   public getProductById = async (req: Request, res: Response, next: NextFunction) => {
     const productId: string = req.params.id;
     const productsOrError = await this.productService.findProductById(productId);
-    if (productsOrError instanceof ItemDoesNotExistError)
-      throw new HttpException(
+    if (productsOrError instanceof ItemDoesNotExistError) {
+      next(new HttpException(
         409,
-        `The product already exists`
-      );
+        `The product does not exists`
+      ));
+      return
+    }
 
     res.status(200).json({data: productsOrError, message: 'findOne'});
   }
@@ -46,10 +48,11 @@ export class ProductController {
     const productData: Product = req.body;
     const successOrError = await this.productService.createProduct(productData);
     if (successOrError instanceof ItemAlreadyExistError) {
-      throw new HttpException(
+      next(new HttpException(
         409,
         `The product already exists`
-      );
+      ));
+      return
     }
 
     res.status(201).json({data: {}, message: 'created'});
@@ -60,10 +63,11 @@ export class ProductController {
     const productData: Product = req.body;
     const successOrError = await this.productService.updateProduct(productId, productData);
     if (successOrError instanceof ItemAlreadyExistError) {
-      throw new HttpException(
+      next(new HttpException(
         409,
         `The product already exists`
-      );
+      ))
+      return
     }
 
     res.status(200).json({data: {}, message: 'updated'});
@@ -73,10 +77,11 @@ export class ProductController {
     const productId: string = req.params.id;
     const successOrError = await this.productService.deleteProduct(productId);
     if (successOrError instanceof ItemDoesNotExistError) {
-      throw new HttpException(
+      next(new HttpException(
         409,
-        `The product already exists`
-      );
+        `The product does not exists`
+      ))
+      return
     }
 
     res.status(200).json({data: {}, message: 'deleted'});
