@@ -2,12 +2,12 @@ import { Status } from "./CheckoutStepper";
 
 const stepClasses: Record<string, any> = {
   complete: {
-    wrapper: "bg-blue-600",
+    wrapper: "bg-blue-600 h-5 w-5",
     line: "bg-blue-600",
     circle: "bg-blue-600",
   },
   current: {
-    wrapper: "border-2 border-blue-600 bg-white",
+    wrapper: "bg-blue-600 h-5 w-5",
     line: "bg-blue-600",
     circle: "bg-blue-600",
   },
@@ -44,8 +44,8 @@ export const StepIndicator = ({ stepStatus, stepName, isHovered }: StepIndicator
       <div className={`absolute inset-0 flex items-center`} aria-hidden="true">
         <div className={`h-1 w-full ${stepClasses[status].line}`}></div>
       </div>
-      <a href="#" className={`relative flex h-5 w-5 items-center justify-center rounded-full ${stepClasses[status].wrapper}`}>
-        {stepStatus === "complete" ? <CheckIcon /> : <CircleIcon stepStatus={status} />}
+      <a href="#" className={`relative flex h-2.5 w-2.5 items-center justify-center rounded-full ${stepClasses[status].wrapper}`}>
+        {stepStatus !== "upcoming" ? <CheckIcon /> : <CircleIcon stepStatus={status} />}
         <span className="sr-only">{stepName}</span>
       </a>
     </div>

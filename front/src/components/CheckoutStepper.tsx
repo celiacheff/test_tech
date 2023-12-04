@@ -32,7 +32,7 @@ const CheckoutStepper = ({ currentStep }: CheckoutStepperProps) => {
   const getStatusFromStep = (step: number): Status => (step < currentStep ? "complete" : step > currentStep ? "upcoming" : "current");
   const isStepHovered = (step: number): boolean => {
     if (stepHovered === null) return false;
-    return step <= stepHovered && getStatusFromStep(step) === "upcoming" ? true : false;
+    return step <= stepHovered && getStatusFromStep(step) === "upcoming";
   };
 
   return (
