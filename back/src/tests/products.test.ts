@@ -3,6 +3,7 @@ import request from "supertest";
 import app from "../app";
 import {CreateProductDto, UpdateProductDto} from "../products/web/products.dto";
 import {ProductModel} from "../products/infra/product.model";
+import {Product} from "../products/core/product";
 
 describe('Products HTTP tests', () => {
   let conn: typeof import("mongoose");
@@ -29,12 +30,7 @@ describe('Products HTTP tests', () => {
 
     await request(app).post('/products').send(dto).expect(201)
     await ProductModel.findOne({name: dto.name}).then(product => {
-      expect(product).toBeTruthy()
-      expect(product.name).toBe(dto.name)
-      expect(product.price).toBe(dto.price)
-      expect(product.quantity).toBe(dto.quantity)
-      expect(product.description).toBe(dto.description)
-      expect(product.category).toBe(dto.category)
+      expectProductToBe(product, dto);
     })
   })
 
@@ -63,12 +59,7 @@ describe('Products HTTP tests', () => {
 
     await request(app).put(`/products/${product._id}`).send(updateDto).expect(200)
     await ProductModel.findOne({name: updateDto.name}).then(product => {
-      expect(product).toBeTruthy()
-      expect(product.name).toBe(updateDto.name)
-      expect(product.price).toBe(updateDto.price)
-      expect(product.quantity).toBe(updateDto.quantity)
-      expect(product.description).toBe(updateDto.description)
-      expect(product.category).toBe(updateDto.category)
+      expectProductToBe(product, updateDto);
     })
   })
 
@@ -107,6 +98,15 @@ describe('Products HTTP tests', () => {
     })
   })
 })
+
+function expectProductToBe(product: Product, dto: CreateProductDto) {
+  expect(product).toBeTruthy()
+  expect(product.name).toBe(dto.name)
+  expect(product.price).toBe(dto.price)
+  expect(product.quantity).toBe(dto.quantity)
+  expect(product.description).toBe(dto.description)
+  expect(product.category).toBe(dto.category)
+}
 
 async function AddProductToDB(data: {
   name: string,
